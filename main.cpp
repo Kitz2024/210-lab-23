@@ -23,13 +23,13 @@ int main()
     bool again;
 
     // read & populate arrays for names and colors
-    ifstream fin("C:/210-Coding/projects/210-lab-23-starter/names.txt");
+    ifstream fin("names.txt");
     string names[SZ_NAMES];
     int i = 0;
     while (fin >> names[i++])
         ;
     fin.close();
-    ifstream fin1("C:/210-Coding/projects/210-lab-23-starter/colors.txt");
+    ifstream fin1("colors.txt");
     string colors[SZ_COLORS];
     i = 0;
     while (fin1 >> colors[i++])
@@ -79,7 +79,16 @@ int main_menu()
 }
 void add_goat(list<Goat> &trip, string names[], string colors[])
 {
-    string name = names[rand() % SZ_NAMES];
+    // Check if the names array is empty
+    if (names[0].empty()) {
+        cout << "Error: No names found in the names.txt file.\n";
+        return;
+    }
+    int nameIndex = rand() % SZ_NAMES;
+    while (names[nameIndex].empty()) {
+        nameIndex = rand() % SZ_NAMES;
+    }
+    string name = names[nameIndex];
     string color = colors[rand() % SZ_COLORS];
     int age = rand() % (MAX_AGE + 1);
     Goat newGoat(name, age, color);
@@ -101,24 +110,23 @@ void delete_goat(list<Goat> &trip)
 
 int select_goat(list<Goat> trip)
 {
-    if (trip.empty())
-    {
+    if (trip.empty()) {
         cout << "No goats in the trip. \n";
         return -1;
     }
-    cout << "\nSelect a goat to delete (enter the corresponding number):\n";
+    cout << "\nSelect a goat to delete (corresponding):\n";
     int i = 1;
-    for (const Goat& goat : trip)
-    {
+    for (const Goat& goat : trip) {
         cout << "[" << i++ << "] " << goat.get_name() << " (" << goat.get_age() << ", " << goat.get_color() << ")\n";
     }
     int choice;
     cin >> choice;
 
-    while (choice < 1 || choice > trip.size())
-    {
-        cout << "Error, Enter a number between 1 and 4: ";
+    while (choice < 1 || choice > trip.size()) {
+        cout << "Error, Enter a number between 1 and " << trip.size() << ": ";
+        cin >> choice;
     }
+    return choice - 1;
 }
 
 void display_trip(list<Goat> trip)
@@ -131,7 +139,6 @@ void display_trip(list<Goat> trip)
     int i = 1;
     for (const Goat& goat : trip)
     {
-
-        cout << setw(3) <<"[" << i++ <<"]" << setw(0) << goat.get_name() << setw(5) << "(" << goat.get_age() << "," << setw(8) << goat.get_color() << ")" << endl;
+        cout << setw(3) <<"[" << i++ <<"]" << setw(5) << goat.get_name() << setw(2) << "(" << goat.get_age() << "," << setw(5) << goat.get_color() << ")" << endl;
     }
 }
