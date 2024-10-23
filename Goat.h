@@ -26,7 +26,11 @@ public:
     string get_color() const        { return color; }
 
     // write overloaded < operator for the std::list
-    
+    friend bool operator<(const Goat& g1, const Goat& g2);
 };
+bool operator<(const Goat& g1, const Goat& g2){
+    return g1.get_name() < g2.get_name(); //Sort by Name
+
+}
 
 #endif
